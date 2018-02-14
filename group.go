@@ -1,7 +1,14 @@
 package entitas
 
+import "errors"
+
+var (
+	ErrEntityNotFound = errors.New("No Entity with this entityID found")
+)
+
 type Group interface {
 	Entities() []Entity
+	GetEntityByID(EntityID) (Entity, error)
 	HandleEntity(e Entity)
 	UpdateEntity(e Entity)
 	WillRemoveEntity(e Entity)
@@ -50,6 +57,14 @@ func (g *group) Entities() []Entity {
 		g.cacheInvalidated = false
 	}
 	return g.cache
+}
+
+func (g *group) GetEntityByID(entityID EntityID) (Entity, error) {
+	entity, exists := g.entities[entityID]
+	if !exists {
+		return nil, ErrEntityNotFound
+	}
+	return entity, nil
 }
 
 func (g *group) HandleEntity(e Entity) {

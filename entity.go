@@ -3,6 +3,7 @@ package entitas
 import (
 	"errors"
 	"fmt"
+	"math"
 	"sort"
 )
 
@@ -12,6 +13,8 @@ var (
 )
 
 type EntityID uint
+
+const InvalidEntityID = EntityID(math.MaxUint32)
 
 type Entity interface {
 	AddComponent(cs ...Component) error

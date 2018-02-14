@@ -5,6 +5,7 @@ import "fmt"
 type Pool interface {
 	CreateEntity(cs ...Component) Entity
 	Entities() []Entity
+	GetEntityByID(EntityID) (Entity, error)
 	Count() int
 	HasEntity(e Entity) bool
 	DestroyEntity(e Entity)
@@ -54,6 +55,14 @@ func (p *pool) Entities() []Entity {
 		p.cache = entities
 	}
 	return p.cache
+}
+
+func (p *pool) GetEntityByID(id EntityID) (Entity, error) {
+	e, ok := p.entities[id]
+	if ok {
+		return e, nil
+	}
+	return nil, ErrEntityNotFound
 }
 
 func (p *pool) Count() int {
